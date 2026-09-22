@@ -1,9 +1,27 @@
 /*
   LOCAL DREAMERS CLUB — EASY EDIT FILE
-  Change wording, links, dates, and colors here first.
-  Set a link to "" to show it as "coming soon" instead of sending visitors nowhere.
+
+  Normal changes should happen here, not in the layout code.
+
+  QUICK RULES
+  1. Change words, links, colors, dates, and labels here.
+  2. Set any feature below to false to hide it without deleting it.
+  3. Leave a link as "" and the site will show "coming soon" instead of a broken link.
+  4. Discord and Etsy feeds start in manual mode. Later we can switch them to live data
+     without redesigning the site.
 */
 window.LDC_CONTENT = {
+  features: {
+    oceansPage: true,
+    homeMeetShareBelong: true,
+    homeClubPulse: true,
+    discord: true,
+    etsy: true,
+    instagram: true,
+    communityPreview: true,
+    shopPreview: true
+  },
+
   brand: {
     name: "Local Dreamers Club",
     shortName: "LDC",
@@ -13,7 +31,6 @@ window.LDC_CONTENT = {
     footerNote: "Made by dreamers, for dreamers."
   },
 
-  /* Replace these when the accounts are ready. */
   links: {
     discord: "",
     etsy: "",
@@ -23,6 +40,7 @@ window.LDC_CONTENT = {
 
   home: {
     intro: "The website is our front door. The conversations, concert plans, art, theories, and everyday check-ins make it a club.",
+
     paths: [
       {
         number: "01",
@@ -46,8 +64,45 @@ window.LDC_CONTENT = {
         link: "discord"
       }
     ],
+
     pulseTitle: "The club is just opening its doors.",
     pulseText: "Oceans Calling is our first hello. We are starting with one shared room and letting the community show us what it wants to become."
+  },
+
+  community: {
+    title: "From the club",
+    intro: "A few things people are talking about, making, or looking forward to.",
+    mode: "manual",
+    items: [
+      {
+        type: "conversation",
+        label: "Talking about",
+        title: "Oceans Calling",
+        text: "Planning, questions, meetups, favorite sets, and the little moments worth remembering.",
+        link: "discord"
+      },
+      {
+        type: "creation",
+        label: "Making",
+        title: "Fan creations",
+        text: "Art, handmade pieces, outfits, bracelets, photos, and whatever somebody felt compelled to make.",
+        link: "discord"
+      },
+      {
+        type: "music",
+        label: "Listening to",
+        title: "What is on repeat?",
+        text: "A low-pressure place to share the song that has your brain in a headlock this week.",
+        link: "discord"
+      }
+    ]
+  },
+
+  shop: {
+    title: "Made by Local Dreamers Club",
+    intro: "A few things Ashlie has been making lately. The shop supports the club; it is not the price of admission.",
+    mode: "manual",
+    items: []
   },
 
   oceans: {
@@ -79,6 +134,17 @@ window.LDC_CONTENT = {
     discordText: "Conversation, fan creations, concert plans, and the Oceans Calling room.",
     etsyText: "Handmade pieces from Ashlie. The shop supports the club; it is not the price of admission.",
     instagramText: "Small updates, works in progress, and things worth sharing."
+  },
+
+  integrations: {
+    discord: {
+      mode: "manual",
+      publicFeedEnabled: false
+    },
+    etsy: {
+      mode: "manual",
+      liveProductsEnabled: false
+    }
   },
 
   theme: {
