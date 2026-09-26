@@ -143,16 +143,17 @@ body[data-page="home"]::before {
 .social-icon-pending { opacity: .72; }
 .etsy-wordmark { font: 700 1.14rem/.9 Georgia, serif; letter-spacing: -.08em; }
 .landing-content { width: min(100%, 920px); display: flex; flex-direction: column; align-items: center; margin-inline: auto; }
-.landing-logo { display: block; width: clamp(360px, 70vw, 760px); max-width: none; height: auto; margin: -1.5rem 0 -7.1rem; filter: drop-shadow(0 15px 35px rgba(0,0,0,.18)); }
+.landing-logo { display: block; width: clamp(360px, 70vw, 760px); max-width: none; height: auto; margin: -3rem 0 -7.1rem; filter: drop-shadow(0 15px 35px rgba(0,0,0,.18)); }
 .landing-copy { position: relative; z-index: 1; }
-.landing-tagline { margin: 0; color: #f3f0e9; font: 500 clamp(1.8rem, 4vw, 3rem)/1.12 Manrope, system-ui, sans-serif; letter-spacing: -.045em; text-wrap: balance; }
-.landing-invitation { margin: .7rem 0 0; color: #d2cec7; font: 400 clamp(1rem, 1.7vw, 1.2rem)/1.45 Manrope, system-ui, sans-serif; letter-spacing: .01em; text-wrap: balance; }
-.action-panel { width: min(100%, 680px); margin: .65rem auto 0; padding: 0; border: 0; border-radius: 0; background: transparent; box-shadow: none; }
-.discord-button { min-height: 3.55rem; width: min(100%, 360px); margin: 0 auto; padding: .72rem 1.25rem; display: flex; align-items: center; justify-content: center; gap: .72rem; background: linear-gradient(125deg, rgba(7,7,7,.96) 0%, rgba(91,24,24,.96) 48%, rgba(238,64,38,.94) 100%); border: 1px solid rgba(255,255,255,.25); border-radius: 16px; color: #fff; font: 600 clamp(1.12rem, 2.2vw, 1.3rem)/1.05 Manrope, system-ui, sans-serif; letter-spacing: .005em; text-decoration: none; box-shadow: 0 8px 24px rgba(0,0,0,.22); transition: transform .18s ease, filter .18s ease; }
+.landing-tagline { margin: 0 0 1.25rem; color: #f3f0e9; font: 500 clamp(1.8rem, 4vw, 3rem)/1.12 Manrope, system-ui, sans-serif; letter-spacing: -.045em; text-wrap: balance; }
+.landing-invitation { margin: 0 0 1.8rem; color: #d2cec7; font: 400 clamp(1rem, 1.7vw, 1.2rem)/1.45 Manrope, system-ui, sans-serif; letter-spacing: .01em; text-wrap: balance; }
+.action-panel { width: min(100%, 680px); margin: 0 auto 0; padding: 0; border: 0; border-radius: 0; background: transparent; box-shadow: none; }
+.discord-button { min-height: 3.55rem; width: min(100%, 360px); margin: 0 auto; padding: .72rem 1.25rem; display: flex; align-items: center; justify-content: center; gap: .72rem; background: linear-gradient(125deg, rgba(7,7,7,.96) 0%, rgba(91,24,24,.96) 48%, rgba(238,64,38,.94) 100%); border: 0; border-radius: 16px; color: #fff; font: 600 clamp(1.12rem, 2.2vw, 1.3rem)/1.05 Manrope, system-ui, sans-serif; letter-spacing: .005em; text-decoration: none; box-shadow: 0 0 0 1px rgba(255,72,48,.18), 0 0 28px rgba(255,55,35,.28), 0 8px 24px rgba(0,0,0,.22); transition: transform .18s ease, filter .18s ease; }
 .discord-button .discord-icon { width: 1.4rem; height: 1.4rem; flex: 0 0 auto; fill: currentColor; }
 .discord-button .discord-icon path { fill: currentColor; stroke: none; }
 .discord-button .discord-icon circle { fill: #b7331b; stroke: none; }
-.discord-button:hover, .discord-button:focus-visible { transform: translateY(-2px); filter: brightness(1.12); outline: 2px solid #f3f0e9; outline-offset: 3px; }
+.discord-button:hover { transform: translateY(-2px); filter: brightness(1.12); box-shadow: 0 0 0 1px rgba(255,72,48,.26), 0 0 38px rgba(255,55,35,.42), 0 10px 28px rgba(0,0,0,.24); }
+.discord-button:focus-visible { outline: 2px solid #fa6847; outline-offset: 4px; }
 .home-about, .dispatches { width: min(100%, 760px); margin: 5.3rem auto 0; text-align: left; }
 .home-about { padding: 0 1.5rem 3.6rem; border-bottom: 1px solid rgba(244,238,229,.19); }
 .section-kicker { margin: 0 0 .7rem; color: #fa6847; font: 500 .69rem/1.3 "DM Mono", monospace; letter-spacing: .13em; text-transform: uppercase; }
@@ -184,7 +185,9 @@ body[data-page="home"]::before {
   .social-group { gap: .32rem; }
   .social-group-label { font-size: .74rem; }
   .social-icon { width: 1.85rem; height: 1.85rem; }
-  .landing-logo { width: min(100vw, 520px); margin: -.75rem 0 -4.1rem; }
+  .landing-logo { width: min(100vw, 520px); margin: -1.5rem 0 -4.1rem; }
+  .landing-tagline { margin-bottom: 1rem; }
+  .landing-invitation { margin-bottom: 1.45rem; }
   .home-about, .dispatches { margin-top: 3.5rem; }
   .home-about { padding: 0 .3rem 2.5rem; }
   .dispatches-heading { align-items: start; flex-direction: column; gap: .8rem; margin-bottom: 1.1rem; }
@@ -197,5 +200,5 @@ body[data-page="home"]::before {
 }
 @media (max-height: 720px) and (min-width: 621px) {
   .landing-main { justify-content: flex-start; }
-  .landing-logo { width: min(58vw, 620px); margin-top: -1.25rem; margin-bottom: -5.5rem; }
+  .landing-logo { width: min(58vw, 620px); margin-top: -2.25rem; margin-bottom: -5.5rem; }
 }

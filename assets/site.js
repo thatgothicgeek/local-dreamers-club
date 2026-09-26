@@ -41,16 +41,21 @@ const socialIcons = {
 };
 
 function homePage() {
+  const socials = content.socials?.length ? content.socials : [
+    { label: "Instagram", url: content.links.instagram, icon: "instagram" },
+    { label: "TikTok", url: content.links.tiktok, icon: "tiktok" },
+    { label: "Etsy", url: content.links.etsy, icon: "etsy" }
+  ];
   return `
     <main id="main" class="landing-main">
       <nav class="landing-social-bar" aria-label="Follow and support Local Dreamers Club">
         <div class="social-group">
           <span class="social-group-label">Follow us:</span>
-          ${(content.socials || [{ label: "Instagram", url: content.links.instagram, icon: "instagram" }, { label: "TikTok", url: content.links.tiktok, icon: "tiktok" }]).slice(0, 2).map((social) => socialLinkFor(social)).join("")}
+          ${socials.slice(0, 2).map((social) => socialLinkFor(social)).join("")}
         </div>
         <div class="social-group">
           <span class="social-group-label">Rep the club:</span>
-          ${(content.socials || [{ label: "Etsy", url: content.links.etsy, icon: "etsy" }]).slice(2, 3).map((social) => socialLinkFor(social)).join("")}
+          ${socials.slice(2).map((social) => socialLinkFor(social)).join("")}
         </div>
       </nav>
       <section class="landing-content" aria-label="Welcome to Local Dreamers Club">
@@ -177,6 +182,8 @@ function formatPost(value) {
   return escapeHTML(value)
     .replace(/\[([^\]]+)\]\((https:\/\/[^\s)]+)\)/g, '<a href="$2" target="_blank" rel="noopener noreferrer">$1</a>')
     .replace(/\*\*(.+?)\*\*/gs, "<strong>$1</strong>")
+    .replace(/\+\+(.+?)\+\+/gs, "<u>$1</u>")
+    .replace(/~~(.+?)~~/gs, "<s>$1</s>")
     .replace(/(^|[^*])\*([^*\n]+)\*(?!\*)/g, "$1<em>$2</em>")
     .replace(/\n/g, "<br>");
 }
@@ -200,7 +207,7 @@ async function loadPublicSettings() {
     const dispatchesIntro = document.querySelector(".dispatches-heading > p");
     if (dispatchesIntro) dispatchesIntro.textContent = content.home.dispatchesIntro;
     const groups = document.querySelectorAll(".landing-social-bar .social-group");
-    [settings.socials.slice(0, 2), settings.socials.slice(2, 3)].forEach((socials, index) => {
+    [settings.socials.slice(0, 2), settings.socials.slice(2)].forEach((socials, index) => {
       const group = groups[index];
       if (!group) return;
       group.querySelectorAll(".social-icon").forEach((icon) => icon.remove());
