@@ -1,78 +1,12 @@
 <!doctype html>
 <html lang="en">
   <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="robots" content="noindex, nofollow" />
-    <meta name="theme-color" content="#282828" />
-    <title>Dreamer Dispatches · Club Admin</title>
-    <link rel="stylesheet" href="/assets/styles.css?v=20260926" />
-    <link rel="stylesheet" href="/assets/admin.css?v=20260926" />
+    <meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="robots" content="noindex, nofollow" /><meta name="theme-color" content="#282828" />
+    <title>New Dispatch · Club Admin</title><link rel="stylesheet" href="/assets/styles.css?v=20260926bb" /><link rel="stylesheet" href="/assets/admin.css?v=20260926bb" />
   </head>
-  <body class="admin-body">
-    <main class="admin-shell">
-      <header class="admin-header">
-        <a href="/" class="admin-back">← View the club site</a>
-        <p class="section-kicker">Local Dreamers Club</p>
-        <h1>Dreamer Dispatches</h1>
-        <p class="admin-intro">A little space to share what’s happening with the club.</p>
-      </header>
-      <section id="login-panel" class="admin-panel" hidden>
-        <h2>Sign in</h2>
-        <form id="login-form" class="admin-form">
-          <label>Username<input name="username" autocomplete="username" required maxlength="80" /></label>
-          <label>Password<input name="password" type="password" autocomplete="current-password" required /></label>
-          <button class="admin-primary" type="submit">Sign in</button>
-          <p class="admin-message" id="login-message" role="status"></p>
-        </form>
-      </section>
-      <section id="editor-panel" hidden>
-        <div class="editor-toolbar"><p>Signed in as <strong id="admin-name"></strong></p><button id="logout-button" class="admin-quiet" type="button">Sign out</button></div>
-        <section class="admin-panel">
-          <h2>Share an update</h2>
-          <form id="post-form" class="admin-form">
-            <label class="sr-only" for="post-body">Update text</label>
-            <div class="format-toolbar" role="toolbar" aria-label="Text formatting">
-              <button type="button" data-format="bold" aria-label="Bold" title="Bold"><strong>B</strong></button>
-              <button type="button" data-format="italic" aria-label="Italic" title="Italic"><em>I</em></button>
-              <button type="button" data-format="link" aria-label="Insert link" title="Insert link">Link</button>
-            </div>
-            <textarea id="post-body" name="body" maxlength="500" rows="4" placeholder="What’s happening in the club?" required></textarea>
-            <div class="character-row"><span>Short and sweet is perfect.</span><span><b id="character-count">0</b> / 500</span></div>
-            <label class="photo-picker">Add photos <span>JPEG, PNG, or WebP · up to 4 photos, 2 MB each</span><input id="post-images" type="file" name="images" accept="image/jpeg,image/png,image/webp" multiple /></label>
-            <div id="new-image-fields" class="image-fields"></div>
-            <button class="admin-primary" type="submit">Publish update</button>
-            <p class="admin-message" id="post-message" role="status"></p>
-          </form>
-        </section>
-        <section class="admin-posts-section">
-          <h2>Published updates</h2>
-          <div id="admin-posts" class="admin-posts"><p class="admin-muted">Loading updates…</p></div>
-        </section>
-        <section class="admin-panel site-settings-panel">
-          <h2>Customize the club page</h2>
-          <p class="admin-muted">Edit the homepage sections and social links. Changes appear on the live page after saving.</p>
-          <form id="site-settings-form" class="admin-form">
-            <fieldset><legend>About section</legend>
-              <label>Heading<input name="aboutTitle" maxlength="120" required /></label>
-              <label>Paragraph<textarea name="aboutText" maxlength="1200" rows="4" required></textarea></label>
-            </fieldset>
-            <fieldset><legend>Dreamer Dispatches</legend>
-              <label>Heading<input name="dispatchesTitle" maxlength="120" required /></label>
-              <label>Intro text<textarea name="dispatchesIntro" maxlength="300" rows="3" required></textarea></label>
-            </fieldset>
-            <fieldset><legend>Social links</legend>
-              <p class="admin-muted">Set a name, secure link, and matching icon for each top-bar link.</p>
-              <div class="social-settings-row"><label>First link name<input name="socialLabel0" maxlength="40" required /></label><label>HTTPS URL<input name="socialUrl0" type="url" required /></label><label>Icon<select name="socialIcon0"><option value="instagram">Instagram</option><option value="tiktok">TikTok</option><option value="etsy">Etsy wordmark</option><option value="discord">Discord</option></select></label></div>
-              <div class="social-settings-row"><label>Second link name<input name="socialLabel1" maxlength="40" required /></label><label>HTTPS URL<input name="socialUrl1" type="url" required /></label><label>Icon<select name="socialIcon1"><option value="instagram">Instagram</option><option value="tiktok">TikTok</option><option value="etsy">Etsy wordmark</option><option value="discord">Discord</option></select></label></div>
-              <div class="social-settings-row"><label>Third link name<input name="socialLabel2" maxlength="40" required /></label><label>HTTPS URL<input name="socialUrl2" type="url" required /></label><label>Icon<select name="socialIcon2"><option value="etsy">Etsy wordmark</option><option value="instagram">Instagram</option><option value="tiktok">TikTok</option><option value="discord">Discord</option></select></label></div>
-            </fieldset>
-            <button class="admin-primary" type="submit">Save page changes</button>
-            <p class="admin-message" id="settings-message" role="status"></p>
-          </form>
-        </section>
-      </section>
-    </main>
-    <script src="/assets/admin.js?v=20260926" defer></script>
-  </body>
-</html>
+  <body class="admin-body" data-admin-page="editor"><main class="admin-shell">
+    <header class="admin-header"><a href="/" class="admin-back">← View the club site</a><p class="section-kicker">Local Dreamers Club</p><h1>New Dispatch</h1><p class="admin-intro">A little space to share what’s happening with the club.</p></header>
+    <section id="login-panel" class="admin-panel" hidden><h2>Sign in</h2><form id="login-form" class="admin-form"><label>Username<input name="username" autocomplete="username" required maxlength="80" /></label><label>Password<input name="password" type="password" autocomplete="current-password" required /></label><button class="admin-primary" type="submit">Sign in</button><p class="admin-message" id="login-message" role="status"></p></form></section>
+    <section id="editor-panel" hidden><div class="editor-toolbar"><p>Signed in as <strong id="admin-name"></strong></p><nav class="admin-nav"><a href="/admin/updates/">Published updates</a><a href="/admin/settings/">Settings</a><button id="logout-button" class="admin-quiet" type="button">Sign out</button></nav></div>
+      <section class="admin-panel"><h2>Share an update</h2><form id="post-form" class="admin-form"><label class="sr-only" for="post-body">Update text</label><div class="format-toolbar" role="toolbar" aria-label="Text formatting"><button type="button" data-format="bold" aria-label="Bold" title="Bold"><strong>B</strong></button><button type="button" data-format="italic" aria-label="Italic" title="Italic"><em>I</em></button><button type="button" data-format="underline" aria-label="Underline" title="Underline"><u>U</u></button><button type="button" data-format="strike" aria-label="Strikethrough" title="Strikethrough"><s>S</s></button><button type="button" data-format="link" aria-label="Insert link" title="Insert link">Link</button><button type="button" data-emoji-toggle aria-expanded="false" aria-label="Choose emoji" title="Choose emoji">☺</button><div class="emoji-picker" hidden>${['🖤','🧡','❤️','💛','💙','🎶','🎤','🎸','🥁','🌊','⚡','⭐','✨','🫶','😭'].map(e=>`<button type="button" data-emoji="${e}" aria-label="${e}">${e}</button>`).join('')}</div></div><textarea id="post-body" name="body" maxlength="500" rows="4" placeholder="What’s happening in the club?" required></textarea><div class="character-row"><span>Short and sweet is perfect.</span><span><b id="character-count">0</b> / 500</span></div><label class="photo-picker">Add photos <span>JPEG, PNG, or WebP · up to 4 photos, 2 MB each</span><input id="post-images" type="file" name="images" accept="image/jpeg,image/png,image/webp" multiple /></label><div id="new-image-fields" class="image-fields"></div><button class="admin-primary" type="submit">Publish update</button><p class="admin-message" id="post-message" role="status"></p></form></section>
+    </section></main><script src="/assets/admin.js?v=20260926bb" defer></script></body></html>

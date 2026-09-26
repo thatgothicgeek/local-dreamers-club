@@ -53,3 +53,15 @@
 .social-settings-row { display: grid; grid-template-columns: minmax(105px,.6fr) minmax(180px,1.4fr) minmax(125px,.7fr); gap: .7rem; }
 .sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; }
 @media (max-width: 640px) { .admin-shell { width: min(100% - 1.25rem, 760px); padding-top: 1rem; } .admin-back { margin-bottom: 2.2rem; } .image-fields { grid-template-columns: 1fr; } .editor-toolbar { align-items: start; } .social-settings-row { grid-template-columns: 1fr; padding: .7rem 0; border-bottom: 1px solid rgba(244,238,229,.1); } }
+.admin-nav { display: flex; align-items: center; gap: .55rem; flex-wrap: wrap; }
+.admin-nav a { color: #f2eee5; font-size: .78rem; text-decoration: none; padding: .55rem .7rem; border: 1px solid rgba(244,238,229,.2); border-radius: 4px; }
+.admin-nav a:hover { border-color: #fa4c20; }
+.format-toolbar { position: relative; flex-wrap: wrap; margin-bottom: -.55rem; }
+.format-toolbar button { display: inline-grid; place-items: center; }
+.emoji-picker { position: absolute; z-index: 5; top: calc(100% + .35rem); right: 0; display: grid; grid-template-columns: repeat(5, 2.5rem); gap: .2rem; padding: .45rem; border: 1px solid rgba(244,238,229,.2); border-radius: 8px; background: #202020; box-shadow: 0 8px 28px rgba(0,0,0,.45); }
+.emoji-picker[hidden] { display: none; }
+.emoji-picker button { min-width: 2.5rem; min-height: 2.5rem; padding: .2rem; border: 0; background: transparent; font-size: 1.25rem; }
+.emoji-picker button:hover { background: rgba(250,76,32,.2); }
+.social-settings-row { grid-template-columns: minmax(105px,.6fr) minmax(180px,1.4fr) minmax(125px,.7fr) auto; align-items: end; }
+.remove-social { min-height: 2.65rem; }
+@media (max-width: 640px) { .editor-toolbar { flex-direction: column; } .admin-nav { width: 100%; } .social-settings-row { grid-template-columns: 1fr; } }

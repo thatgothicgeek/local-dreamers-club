@@ -96,7 +96,7 @@ function validateSiteSettings(value) {
   }
   const limits = { aboutTitle: 120, aboutText: 1200, dispatchesTitle: 120, dispatchesIntro: 300 };
   if (textFields.some((key) => value[key].length > limits[key])) return "One of the text fields is longer than its limit.";
-  if (!Array.isArray(value.socials) || value.socials.length !== 3) return "Set up all three social links.";
+  if (!Array.isArray(value.socials) || value.socials.length < 1 || value.socials.length > 10) return "Add between one and ten social links.";
   const allowedIcons = new Set(["instagram", "tiktok", "etsy", "discord"]);
   for (const social of value.socials) {
     if (!social || typeof social.label !== "string" || !social.label.trim() || social.label.length > 40 || typeof social.url !== "string" || social.url.length > 500 || !allowedIcons.has(social.icon)) return "Check each social label, URL, and icon.";
