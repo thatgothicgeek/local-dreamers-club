@@ -42,12 +42,13 @@ async function start() {
 
 document.querySelector("#login-form").addEventListener("submit", async (event) => {
   event.preventDefault();
+  const formElement = event.currentTarget;
   message("#login-message", "Signing in…");
-  const form = new FormData(event.currentTarget);
+  const form = new FormData(formElement);
   try {
     const result = await api("/api/admin/login", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ username: form.get("username"), password: form.get("password") }) });
     csrf = result.token;
-    event.currentTarget.reset();
+    formElement.reset();
     showSignedIn(result.username);
   } catch (error) { message("#login-message", error.message, true); }
 });
