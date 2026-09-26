@@ -46,31 +46,35 @@ const socialIcons = {
 
 function socialLink(key, label) {
   const url = linkFor(key);
-  const inner = `${socialIcons[key]}<span class="social-name">${label}</span>`;
+  const accessibleLabel = `Visit Local Dreamers Club on ${label}`;
   return url
-    ? `<a class="social-card" href="${url}" target="_blank" rel="noopener noreferrer" aria-label="Visit Local Dreamers Club on ${label}">${inner}</a>`
-    : `<div class="social-card social-card-pending" aria-label="${label} link coming soon">${inner}</div>`;
+    ? `<a class="social-icon" href="${url}" target="_blank" rel="noopener noreferrer" aria-label="${accessibleLabel}" title="${label}">${socialIcons[key]}</a>`
+    : `<span class="social-icon social-icon-pending" aria-label="${label} link coming soon">${socialIcons[key]}</span>`;
 }
 
 function homePage() {
   return `
     <main id="main" class="landing-main">
+      <nav class="landing-social-bar" aria-label="Follow and support Local Dreamers Club">
+        <div class="social-group">
+          <span class="social-group-label">Follow us:</span>
+          ${socialLink("instagram", "Instagram")}
+          ${socialLink("tiktok", "TikTok")}
+        </div>
+        <div class="social-group">
+          <span class="social-group-label">Rep the club:</span>
+          ${socialLink("etsy", "Etsy")}
+        </div>
+      </nav>
       <section class="landing-content" aria-label="Welcome to Local Dreamers Club">
-        <h1 class="visually-hidden">${content.brand.name}</h1>
         <img class="landing-logo" src="/assets/images/local-dreamers-club-logo.png" alt="" width="2048" height="2048" />
         <div class="landing-copy">
-          <p class="landing-tagline">${content.home.tagline}</p>
+          <h1 class="landing-tagline">${content.home.tagline}</h1>
           <p class="landing-invitation">${content.home.invitation}</p>
         </div>
       </section>
       <section class="action-panel" aria-label="Join and follow the club">
-        <a class="discord-button" href="${linkFor("discord")}" target="_blank" rel="noopener noreferrer">Join the club on Discord <span aria-hidden="true">↗</span></a>
-        <p class="action-caption">Follow along and rep your fandom</p>
-        <nav class="landing-socials" aria-label="Follow and shop">
-          ${socialLink("instagram", "Instagram")}
-          ${socialLink("tiktok", "TikTok")}
-          ${socialLink("etsy", "Etsy merch")}
-        </nav>
+        <a class="discord-button" href="${linkFor("discord")}" target="_blank" rel="noopener noreferrer">${socialIcons.discord}<span>Join the Club</span></a>
       </section>
       <section class="home-about" id="about">
         <p class="section-kicker">A place to find your people</p>

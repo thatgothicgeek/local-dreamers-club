@@ -23,8 +23,8 @@ window.LDC_CONTENT = {
   },
 
   home: {
-    tagline: "East is up. Your people are here.",
-    invitation: "Find your people. Follow the signal.",
+    tagline: "Welcome Dreamers",
+    invitation: "A place for the Few, the Proud, the Emotional.",
     aboutTitle: "About the Local Dreamers Club",
     aboutText: "Local Dreamers Club is a fan-made space for people who find connection through music. Meet other fans, share creations and concert moments, and find your people in a welcoming community without gatekeeping.",
     dispatchesTitle: "Dreamer Dispatches",
