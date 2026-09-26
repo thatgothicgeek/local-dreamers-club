@@ -6,7 +6,8 @@ A small Node.js site with a public landing page and a private editor for short c
 
 - `/` — Landing page, club links, About, and Dreamer Dispatches
 - `/admin/` — Private sign-in, publishing, and update management
-- `/oceans/`, `/about/`, `/connect/` — Earlier supporting pages
+- `/oceans/` — Redirects to the homepage for existing QR codes
+- `/about/`, `/connect/` — Earlier supporting pages
 
 ## Local preview
 

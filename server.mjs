@@ -244,6 +244,7 @@ app.delete("/api/admin/updates/:id", async (req, res, next) => {
   } catch (error) { next(error); }
 });
 
+app.get("/oceans", (_req, res) => res.redirect(302, "/"));
 app.use(express.static(dist, { index: "index.html", maxAge: isProduction ? "1h" : 0 }));
 app.get("/admin", (_req, res) => res.redirect(302, "/admin/"));
 app.get("/admin/", (_req, res) => res.sendFile(join(dist, "admin", "index.html")));

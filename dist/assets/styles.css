@@ -28,7 +28,7 @@ button, a { -webkit-tap-highlight-color: transparent; }
 .menu-button { display: none; border: 1px solid var(--line); background: transparent; color: var(--paper); padding: .65rem .8rem; font: .75rem "DM Mono", monospace; text-transform: uppercase; }
 
 main { overflow: hidden; }
-.hero, .inner-hero, .oceans-hero { position: relative; max-width: var(--max); margin: 0 auto; padding: clamp(5rem, 12vw, 9rem) 1.5rem 6rem; }
+.hero, .inner-hero { position: relative; max-width: var(--max); margin: 0 auto; padding: clamp(5rem, 12vw, 9rem) 1.5rem 6rem; }
 .eyebrow, .stamp { margin: 0 0 1.4rem; font: .76rem/1.4 "DM Mono", monospace; letter-spacing: .13em; text-transform: uppercase; }
 .eyebrow::before { content: "// "; color: var(--red); }
 h1, h2, p { margin-top: 0; }
@@ -60,18 +60,7 @@ h1, h2, p { margin-top: 0; }
 .club-pulse h2 { margin-bottom: .8rem; font: clamp(2rem, 4vw, 4rem)/.95 "Archivo Black", sans-serif; letter-spacing: -.05em; text-transform: uppercase; }
 .club-pulse p { line-height: 1.6; }
 
-.oceans-main { background: linear-gradient(180deg, #0a0a0b 0%, #11151a 57%, #0a0a0b 100%); }
-.oceans-hero { min-height: 76vh; display: flex; flex-direction: column; justify-content: center; }
-.oceans-hero h1, .inner-hero h1 { max-width: 930px; margin-bottom: 1.5rem; font: clamp(3.8rem, 10vw, 8.5rem)/.86 "Archivo Black", sans-serif; letter-spacing: -.075em; text-transform: uppercase; }
-.ocean-signal { position: absolute; inset: 16% 0 auto 55%; height: 280px; opacity: .42; pointer-events: none; }
-.ocean-signal span { position: absolute; inset: 0; border: 1px solid var(--paper); border-radius: 50%; transform: rotate(-8deg); }
-.ocean-signal span:nth-child(2) { inset: 25px -40px -20px 15px; border-color: var(--red); }
-.ocean-signal span:nth-child(3) { inset: 70px 30px -40px -25px; }
-.event-meta { margin-top: 4rem; padding-top: 1rem; display: flex; gap: 2rem; border-top: 1px solid var(--line); font: .75rem "DM Mono", monospace; text-transform: uppercase; letter-spacing: .08em; }
-.memory-card { max-width: 920px; margin: 2rem auto 8rem; padding: clamp(2rem, 7vw, 5rem); background: var(--paper); color: var(--ink); transform: rotate(-1deg); box-shadow: 14px 14px 0 var(--red); }
-.memory-card blockquote { margin: 0 0 2rem; font: clamp(2rem, 6vw, 5rem)/1 "Archivo Black", sans-serif; letter-spacing: -.06em; text-transform: uppercase; }
-.memory-card > p:last-child { margin-bottom: 0; font: .9rem/1.5 "DM Mono", monospace; }
-.oceans-close { max-width: var(--max); margin: 0 auto; padding: 4rem 1.5rem 7rem; display: flex; justify-content: space-between; gap: 2rem; border-top: 1px solid var(--line); font: .78rem "DM Mono", monospace; letter-spacing: .08em; }
+.inner-hero h1 { max-width: 930px; margin-bottom: 1.5rem; font: clamp(3.8rem, 10vw, 8.5rem)/.86 "Archivo Black", sans-serif; letter-spacing: -.075em; text-transform: uppercase; }
 
 .inner-page { min-height: 70vh; }
 .inner-hero { padding-bottom: 4rem; }
@@ -98,7 +87,7 @@ h1, h2, p { margin-top: 0; }
   .site-nav { position: absolute; top: calc(100% + 1px); left: 0; right: 0; padding: 1rem; display: none; flex-direction: column; align-items: stretch; gap: .2rem; background: var(--ink); border-bottom: 1px solid var(--line); }
   .site-nav.is-open { display: flex; }
   .site-nav a { padding: .9rem .4rem; }
-  .hero, .inner-hero, .oceans-hero { padding-inline: 1rem; }
+  .hero, .inner-hero { padding-inline: 1rem; }
   .home-hero { padding-top: 4.5rem; }
   .home-hero h1 { font-size: clamp(4.1rem, 23vw, 7rem); }
   .thread-line { width: 38vw; height: 34%; top: 13%; opacity: .3; }
@@ -106,10 +95,6 @@ h1, h2, p { margin-top: 0; }
   .path-card, .path-card:first-child { min-height: 23rem; border-left: 0; border-right: 0; border-bottom: 1px solid var(--line); padding: 2rem 1rem; }
   .path-card > p:not(.card-number) { min-height: 0; }
   .club-pulse { margin: 2rem 1rem 4rem; grid-template-columns: 1fr; }
-  .ocean-signal { inset: 13% -30% auto 42%; }
-  .event-meta { justify-content: space-between; gap: .75rem; }
-  .memory-card { margin: 1rem 1rem 6rem; box-shadow: 8px 8px 0 var(--red); }
-  .oceans-close { padding-inline: 1rem; flex-direction: column; }
   .principles div { padding-inline: 1rem; grid-template-columns: 3rem 1fr; }
   .connect-list article { padding-inline: 1rem; grid-template-columns: 3rem 1fr; gap: 1rem; }
   .connect-list article > .text-link { grid-column: 2; }
