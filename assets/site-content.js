@@ -57,18 +57,6 @@ window.LDC_CONTENT = {
     pulseText: "Oceans Calling is our first hello. We are starting with one shared room and letting the community show us what it wants to become."
   },
 
-  oceans: {
-    label: "Oceans Calling · 2026",
-    title: "Different paths. Same horizon.",
-    intro: "If a shirt, a QR code, or a chance meeting brought you here—hello. This is a small place to find other fans, swap festival moments, and leave with more than a camera roll.",
-    primaryButton: "Who else is here?",
-    secondaryButton: "What is this club?",
-    prompt: "One photo. One moment. One thing you do not want to forget.",
-    note: "Post it in the Oceans Calling room when the Discord opens.",
-    place: "Ocean City, Maryland",
-    date: "September 2026"
-  },
-
   about: {
     title: "The kind of place we wanted to find.",
     body: "Local Dreamers Club began with handmade things inspired by music. But the best part was never the object—it was recognizing another person in the crowd, trading a story, or realizing somebody else felt it too.",

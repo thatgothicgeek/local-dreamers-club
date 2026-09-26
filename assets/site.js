@@ -19,7 +19,6 @@ function header() {
       <button class="menu-button" type="button" aria-expanded="false" aria-controls="site-nav">Menu</button>
       <nav id="site-nav" class="site-nav" aria-label="Main navigation">
         <a href="/">Home</a>
-        <a href="/oceans/">Oceans</a>
         <a href="/about/">About</a>
         <a href="/connect/">Connect</a>
       </nav>
@@ -93,35 +92,6 @@ function homePage() {
     </main>`;
 }
 
-function oceansPage() {
-  const o = content.oceans;
-  return `
-    <main id="main" class="oceans-main">
-      <section class="oceans-hero">
-        <div class="ocean-signal" aria-hidden="true"><span></span><span></span><span></span></div>
-        <p class="eyebrow">${o.label}</p>
-        <h1>${o.title}</h1>
-        <p class="hero-copy">${o.intro}</p>
-        <div class="hero-actions">
-          ${safeLink(linkFor("discord"), o.primaryButton, "button button-primary")}
-          <a class="button button-quiet" href="/about/">${o.secondaryButton} <span aria-hidden="true">→</span></a>
-        </div>
-        <div class="event-meta"><span>${o.place}</span><span>${o.date}</span></div>
-      </section>
-
-      <section class="memory-card">
-        <p class="stamp">AFTER THE MUSIC</p>
-        <blockquote>${o.prompt}</blockquote>
-        <p>${o.note}</p>
-      </section>
-
-      <section class="oceans-close">
-        <p>YOU FOUND ANOTHER DREAMER.</p>
-        <a href="/connect/">Stay in touch <span aria-hidden="true">→</span></a>
-      </section>
-    </main>`;
-}
-
 function aboutPage() {
   const a = content.about;
   return `
@@ -175,7 +145,7 @@ function render() {
   document.documentElement.style.setProperty("--muted", content.theme.muted);
 
   const page = document.body.dataset.page;
-  const pages = { home: homePage, oceans: oceansPage, about: aboutPage, connect: connectPage };
+  const pages = { home: homePage, about: aboutPage, connect: connectPage };
   document.body.innerHTML = page === "home"
     ? '<a class="skip-link" href="#main">Skip to content</a>' + homePage()
     : header() + (pages[page] || homePage)() + footer();
