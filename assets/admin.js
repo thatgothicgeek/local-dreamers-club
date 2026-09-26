@@ -27,6 +27,7 @@ function showSignedIn(username) {
   editorPanel.hidden = false;
   document.querySelector("#admin-name").textContent = username;
   loadPosts();
+  loadSiteSettings();
 }
 
 async function start() {
@@ -86,6 +87,25 @@ document.querySelector("#post-body").addEventListener("input", (event) => {
   document.querySelector("#character-count").textContent = event.currentTarget.value.length;
 });
 
+function applyFormat(textarea, type) {
+  const start = textarea.selectionStart;
+  const end = textarea.selectionEnd;
+  const selected = textarea.value.slice(start, end);
+  const wrappers = { bold: ["**", "**"], italic: ["*", "*"], link: ["[", "](https://)"] };
+  const [before, after] = wrappers[type] || ["", ""];
+  const value = selected || (type === "link" ? "link text" : "text");
+  textarea.setRangeText(`${before}${value}${after}`, start, end, "select");
+  textarea.focus();
+  textarea.dispatchEvent(new Event("input", { bubbles: true }));
+}
+
+document.addEventListener("click", (event) => {
+  const button = event.target.closest("[data-format]");
+  if (!button) return;
+  const textarea = button.closest("form")?.querySelector('textarea[name="body"]');
+  if (textarea) applyFormat(textarea, button.dataset.format);
+});
+
 function appendImageFields(formData, files, altInputs) {
   formData.append("imageAlts", JSON.stringify(altInputs.map((input) => input.value.trim())));
   files.forEach((file) => formData.append("images", file));
@@ -122,12 +142,41 @@ async function loadPosts() {
   } catch (error) { container.innerHTML = `<p class="admin-error">${esc(error.message)}</p>`; }
 }
 
+async function loadSiteSettings() {
+  const form = document.querySelector("#site-settings-form");
+  try {
+    const settings = await api("/api/admin/site-settings");
+    for (const name of ["aboutTitle", "aboutText", "dispatchesTitle", "dispatchesIntro"]) form.elements[name].value = settings[name];
+    settings.socials.forEach((social, index) => {
+      form.elements[`socialLabel${index}`].value = social.label;
+      form.elements[`socialUrl${index}`].value = social.url;
+      form.elements[`socialIcon${index}`].value = social.icon;
+    });
+  } catch (error) { message("#settings-message", error.message, true); }
+}
+
+document.querySelector("#site-settings-form").addEventListener("submit", async (event) => {
+  event.preventDefault();
+  const form = event.currentTarget;
+  const settings = Object.fromEntries(["aboutTitle", "aboutText", "dispatchesTitle", "dispatchesIntro"].map((key) => [key, form.elements[key].value]));
+  settings.socials = [0, 1, 2].map((index) => ({
+    label: form.elements[`socialLabel${index}`].value,
+    url: form.elements[`socialUrl${index}`].value,
+    icon: form.elements[`socialIcon${index}`].value
+  }));
+  message("#settings-message", "Saving page changes…");
+  try {
+    await api("/api/admin/site-settings", { method: "PUT", headers: { "Content-Type": "application/json" }, body: JSON.stringify(settings) });
+    message("#settings-message", "Page changes saved. Refresh the club site to see them.");
+  } catch (error) { message("#settings-message", error.message, true); }
+});
+
 function renderPost(post) {
   const article = document.createElement("article");
   article.className = "admin-post";
   article.dataset.id = post.id;
   const photos = post.images.map((image) => `<img src="${esc(image.url)}" alt="${esc(image.alt || "Club update photo")}">`).join("");
-  article.innerHTML = `<p class="admin-post-date">${esc(dateText(post.createdAt))}</p><p class="admin-post-body">${esc(post.body).replace(/\n/g, "<br>")}</p>${photos ? `<div class="admin-post-images">${photos}</div>` : ""}<div class="admin-post-actions"><button type="button" data-action="edit">Edit</button><button type="button" data-action="delete">Delete</button></div>`;
+  article.innerHTML = `<p class="admin-post-date">${esc(dateText(post.createdAt))}</p><p class="admin-post-body">${formatBody(post.body)}</p>${photos ? `<div class="admin-post-images">${photos}</div>` : ""}<div class="admin-post-actions"><button type="button" data-action="edit">Edit</button><button type="button" data-action="delete">Delete</button></div>`;
   article.addEventListener("click", (event) => {
     const button = event.target.closest("[data-action]");
     if (!button) return;
@@ -138,7 +187,7 @@ function renderPost(post) {
 }
 
 function editPost(post, article) {
-  article.innerHTML = `<form class="admin-form edit-form"><p class="admin-post-date">${esc(dateText(post.createdAt))}</p><label>Update text<textarea name="body" maxlength="500" rows="4" required>${esc(post.body)}</textarea></label>${post.images.length ? `<fieldset class="remove-photos"><legend>Current photos</legend>${post.images.map((image) => `<label><input type="checkbox" name="removeImage" value="${image.id}"> Remove this photo <img src="${esc(image.url)}" alt="${esc(image.alt || "Club update photo")}"></label>`).join("")}</fieldset>` : ""}<label class="photo-picker">Add photos <span>Up to 4 total · JPEG, PNG, or WebP · 2 MB each</span><input type="file" name="images" accept="image/jpeg,image/png,image/webp" multiple></label><div class="image-fields"></div><div class="admin-post-actions"><button class="admin-primary" type="submit">Save update</button><button type="button" data-action="cancel">Cancel</button></div><p class="admin-message" role="status"></p></form>`;
+  article.innerHTML = `<form class="admin-form edit-form"><p class="admin-post-date">${esc(dateText(post.createdAt))}</p><label>Update text<textarea name="body" maxlength="500" rows="4" required>${esc(post.body)}</textarea></label><div class="format-toolbar" role="toolbar" aria-label="Text formatting"><button type="button" data-format="bold" aria-label="Bold" title="Bold"><strong>B</strong></button><button type="button" data-format="italic" aria-label="Italic" title="Italic"><em>I</em></button><button type="button" data-format="link" aria-label="Insert link" title="Insert link">Link</button></div>${post.images.length ? `<fieldset class="remove-photos"><legend>Current photos</legend>${post.images.map((image) => `<label><input type="checkbox" name="removeImage" value="${image.id}"> Remove this photo <img src="${esc(image.url)}" alt="${esc(image.alt || "Club update photo")}"></label>`).join("")}</fieldset>` : ""}<label class="photo-picker">Add photos <span>Up to 4 total · JPEG, PNG, or WebP · 2 MB each</span><input type="file" name="images" accept="image/jpeg,image/png,image/webp" multiple></label><div class="image-fields"></div><div class="admin-post-actions"><button class="admin-primary" type="submit">Save update</button><button type="button" data-action="cancel">Cancel</button></div><p class="admin-message" role="status"></p></form>`;
   const form = article.querySelector("form");
   const fileInput = form.querySelector('input[type="file"]');
   const target = form.querySelector(".image-fields");
@@ -160,6 +209,14 @@ function editPost(post, article) {
       article.replaceWith(renderPost(result.item));
     } catch (error) { messageIn(form, error.message, true); }
   });
+}
+
+function formatBody(value) {
+  return esc(value)
+    .replace(/\[([^\]]+)\]\((https:\/\/[^\s)]+)\)/g, '<a href="$2" target="_blank" rel="noopener noreferrer">$1</a>')
+    .replace(/\*\*(.+?)\*\*/gs, "<strong>$1</strong>")
+    .replace(/(^|[^*])\*([^*\n]+)\*(?!\*)/g, "$1<em>$2</em>")
+    .replace(/\n/g, "<br>");
 }
 
 function messageIn(form, text, error = false) {
