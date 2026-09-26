@@ -35,4 +35,6 @@ Set the Hostinger start command to `npm start`. The process serves both the publ
 
 Updates publish immediately and appear newest first. Each has up to 500 plain-text characters and up to four optional JPEG, PNG, or WebP images, each no larger than 2 MB. Image data is stored in MariaDB so it remains available after app deployments. Images may include an optional description for screen readers.
 
-For design text and social links, edit `dist/assets/site-content.js`. The interactive feed content is managed from `/admin/`.
+The public landing page reads section copy and three social links from MariaDB. The private `/admin/` page can change the About and Dreamer Dispatches copy, link names, secure URLs, and matching icons. The `site_settings` table is included in `database/schema.sql` and is also created automatically at app startup when the database user has permission.
+
+The Dispatches editor includes bold, italic, and HTTPS link formatting. It stores lightweight formatting markers in the 500-character update field, so the markers count toward that limit. The tagline and fallback text remain in `dist/assets/site-content.js`.

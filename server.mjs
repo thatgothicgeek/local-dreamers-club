@@ -53,6 +53,59 @@ const upload = multer({
 });
 const loginLimiter = rateLimit({ windowMs: 15 * 60 * 1000, limit: 10, standardHeaders: "draft-8", legacyHeaders: false });
 
+const defaultSiteSettings = {
+  aboutTitle: "About the Local Dreamers Club",
+  aboutText: "Local Dreamers Club is a fan-made space for people who find connection through music. Meet other fans, share creations and concert moments, and find your people in a welcoming community without gatekeeping.",
+  dispatchesTitle: "Dreamer Dispatches",
+  dispatchesIntro: "Little notes from the club—what we're making, planning, and dreaming up together.",
+  socials: [
+    { label: "Instagram", url: "https://www.instagram.com/local_dreamers_club/", icon: "instagram" },
+    { label: "TikTok", url: "https://www.tiktok.com/@just_a_local_dreamer", icon: "tiktok" },
+    { label: "Etsy", url: "https://www.etsy.com/shop/LocalDreamersClub", icon: "etsy" }
+  ]
+};
+
+let settingsTableReady = !pool;
+async function ensureSettingsTable() {
+  if (!pool) return;
+  try {
+    await pool.execute(`CREATE TABLE IF NOT EXISTS site_settings (
+      setting_key VARCHAR(64) NOT NULL PRIMARY KEY,
+      setting_value LONGTEXT NOT NULL,
+      updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+    ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci`);
+    settingsTableReady = true;
+  } catch (error) {
+    settingsTableReady = false;
+    console.error("Page customization storage is unavailable:", error.message);
+  }
+}
+async function readSiteSettings() {
+  if (!pool || !settingsTableReady) return defaultSiteSettings;
+  const [rows] = await pool.execute("SELECT setting_value FROM site_settings WHERE setting_key = 'landing'");
+  if (!rows.length) return defaultSiteSettings;
+  try {
+    const saved = JSON.parse(rows[0].setting_value);
+    return { ...defaultSiteSettings, ...saved, socials: Array.isArray(saved.socials) ? saved.socials : defaultSiteSettings.socials };
+  } catch { return defaultSiteSettings; }
+}
+function validateSiteSettings(value) {
+  const textFields = ["aboutTitle", "aboutText", "dispatchesTitle", "dispatchesIntro"];
+  if (!value || typeof value !== "object" || textFields.some((key) => typeof value[key] !== "string" || !value[key].trim())) {
+    return "Complete each page section before saving.";
+  }
+  const limits = { aboutTitle: 120, aboutText: 1200, dispatchesTitle: 120, dispatchesIntro: 300 };
+  if (textFields.some((key) => value[key].length > limits[key])) return "One of the text fields is longer than its limit.";
+  if (!Array.isArray(value.socials) || value.socials.length !== 3) return "Set up all three social links.";
+  const allowedIcons = new Set(["instagram", "tiktok", "etsy", "discord"]);
+  for (const social of value.socials) {
+    if (!social || typeof social.label !== "string" || !social.label.trim() || social.label.length > 40 || typeof social.url !== "string" || social.url.length > 500 || !allowedIcons.has(social.icon)) return "Check each social label, URL, and icon.";
+    try { if (!["https:"].includes(new URL(social.url).protocol)) return "Social links must use HTTPS URLs."; }
+    catch { return "Enter a valid HTTPS URL for each social link."; }
+  }
+  return "";
+}
+
 function databaseRequired(_req, res, next) {
   if (!pool) return res.status(503).json({ error: "The update service is not configured yet." });
   next();
@@ -135,6 +188,10 @@ async function addImages(connection, postId, files, alts, positionStart = 0) {
 app.get("/api/health", (_req, res) => res.json({ ok: true, databaseConfigured: Boolean(pool) }));
 app.get("/api/admin/csrf", (req, res) => res.json({ token: csrfToken(req) }));
 app.get("/api/admin/session", (req, res) => res.json({ username: req.session.admin || null, token: csrfToken(req) }));
+app.get("/api/site-settings", async (_req, res, next) => {
+  try { res.json(await readSiteSettings()); }
+  catch (error) { next(error); }
+});
 
 app.post("/api/admin/login", loginLimiter, databaseRequired, verifyCsrf, async (req, res, next) => {
   try {
@@ -191,6 +248,27 @@ app.get("/api/admin/updates", async (_req, res, next) => {
     res.json({ items: await getPosts(rows) });
   } catch (error) { next(error); }
 });
+app.get("/api/admin/site-settings", async (_req, res, next) => {
+  if (!settingsTableReady) return res.status(503).json({ error: "Page customization storage is unavailable. Confirm the site_settings table exists and redeploy." });
+  try { res.json(await readSiteSettings()); }
+  catch (error) { next(error); }
+});
+app.put("/api/admin/site-settings", async (req, res, next) => {
+  if (!settingsTableReady) return res.status(503).json({ error: "Page customization storage is unavailable. Confirm the site_settings table exists and redeploy." });
+  const errorMessage = validateSiteSettings(req.body);
+  if (errorMessage) return res.status(400).json({ error: errorMessage });
+  const settings = {
+    aboutTitle: req.body.aboutTitle.trim(),
+    aboutText: req.body.aboutText.trim(),
+    dispatchesTitle: req.body.dispatchesTitle.trim(),
+    dispatchesIntro: req.body.dispatchesIntro.trim(),
+    socials: req.body.socials.map(({ label, url, icon }) => ({ label: label.trim(), url: url.trim(), icon }))
+  };
+  try {
+    await pool.execute("INSERT INTO site_settings (setting_key, setting_value) VALUES ('landing', ?) ON DUPLICATE KEY UPDATE setting_value = VALUES(setting_value)", [JSON.stringify(settings)]);
+    res.json(settings);
+  } catch (error) { next(error); }
+});
 app.post("/api/admin/updates", upload.array("images", 4), async (req, res, next) => {
   const body = String(req.body.body || "");
   const files = req.files || [];
@@ -245,7 +323,13 @@ app.delete("/api/admin/updates/:id", async (req, res, next) => {
 });
 
 app.get(/^\/oceans(?:\/.*)?$/i, (_req, res) => res.redirect(302, "/"));
-app.use(express.static(dist, { index: "index.html", maxAge: isProduction ? "1h" : 0 }));
+app.use(express.static(dist, {
+  index: "index.html",
+  maxAge: isProduction ? "1h" : 0,
+  setHeaders(response, path) {
+    if (/\.(?:html|css|js)$/.test(path)) response.setHeader("Cache-Control", "public, max-age=0, must-revalidate");
+  }
+}));
 app.get("/admin", (_req, res) => res.redirect(302, "/admin/"));
 app.get("/admin/", (_req, res) => res.sendFile(join(dist, "admin", "index.html")));
 app.get("/api/*path", (_req, res) => res.status(404).json({ error: "That API route was not found." }));
@@ -259,3 +343,4 @@ app.use((error, _req, res, _next) => {
 });
 
 app.listen(port, () => console.log(`Local Dreamers Club listening on port ${port}`));
+void ensureSettingsTable();
