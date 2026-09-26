@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="robots" content="noindex, nofollow" />
+    <meta name="theme-color" content="#282828" />
+    <title>Dreamer Dispatches · Club Admin</title>
+    <link rel="stylesheet" href="/assets/styles.css" />
+    <link rel="stylesheet" href="/assets/admin.css" />
+  </head>
+  <body class="admin-body">
+    <main class="admin-shell">
+      <header class="admin-header">
+        <a href="/" class="admin-back">← View the club site</a>
+        <p class="section-kicker">Local Dreamers Club</p>
+        <h1>Dreamer Dispatches</h1>
+        <p class="admin-intro">A little space to share what’s happening with the club.</p>
+      </header>
+      <section id="login-panel" class="admin-panel" hidden>
+        <h2>Sign in</h2>
+        <form id="login-form" class="admin-form">
+          <label>Username<input name="username" autocomplete="username" required maxlength="80" /></label>
+          <label>Password<input name="password" type="password" autocomplete="current-password" required /></label>
+          <button class="admin-primary" type="submit">Sign in</button>
+          <p class="admin-message" id="login-message" role="status"></p>
+        </form>
+      </section>
+      <section id="editor-panel" hidden>
+        <div class="editor-toolbar"><p>Signed in as <strong id="admin-name"></strong></p><button id="logout-button" class="admin-quiet" type="button">Sign out</button></div>
+        <section class="admin-panel">
+          <h2>Share an update</h2>
+          <form id="post-form" class="admin-form">
+            <label class="sr-only" for="post-body">Update text</label>
+            <textarea id="post-body" name="body" maxlength="500" rows="4" placeholder="What’s happening in the club?" required></textarea>
+            <div class="character-row"><span>Short and sweet is perfect.</span><span><b id="character-count">0</b> / 500</span></div>
+            <label class="photo-picker">Add photos <span>JPEG, PNG, or WebP · up to 4 photos, 2 MB each</span><input id="post-images" type="file" name="images" accept="image/jpeg,image/png,image/webp" multiple /></label>
+            <div id="new-image-fields" class="image-fields"></div>
+            <button class="admin-primary" type="submit">Publish update</button>
+            <p class="admin-message" id="post-message" role="status"></p>
+          </form>
+        </section>
+        <section class="admin-posts-section">
+          <h2>Published updates</h2>
+          <div id="admin-posts" class="admin-posts"><p class="admin-muted">Loading updates…</p></div>
+        </section>
+      </section>
+    </main>
+    <script src="/assets/admin.js" defer></script>
+  </body>
+</html>
