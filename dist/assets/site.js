@@ -1,5 +1,4 @@
 const content = window.LDC_CONTENT;
-const features = content.features || {};
 
 const linkFor = (key) => content.links[key] || "";
 
@@ -11,7 +10,6 @@ function safeLink(url, label, className = "text-link") {
 }
 
 function header() {
-  const oceansNav = features.oceansPage !== false ? '<a href="/oceans/">Oceans</a>' : "";
   return `
     <a class="skip-link" href="#main">Skip to content</a>
     <header class="site-header">
@@ -21,7 +19,7 @@ function header() {
       <button class="menu-button" type="button" aria-expanded="false" aria-controls="site-nav">Menu</button>
       <nav id="site-nav" class="site-nav" aria-label="Main navigation">
         <a href="/">Home</a>
-        ${oceansNav}
+        <a href="/oceans/">Oceans</a>
         <a href="/about/">About</a>
         <a href="/connect/">Connect</a>
       </nav>
@@ -29,110 +27,74 @@ function header() {
 }
 
 function footer() {
-  const instagram = features.instagram !== false ? safeLink(linkFor("instagram"), "Instagram") : "";
-  const etsy = features.etsy !== false ? safeLink(linkFor("etsy"), "Etsy") : "";
   return `
     <footer class="site-footer">
       <p>${content.brand.footerNote}</p>
-      <div class="footer-links">${instagram}${etsy}</div>
+      <div class="footer-links">
+        ${safeLink(linkFor("instagram"), "Instagram")}
+        ${safeLink(linkFor("etsy"), "Etsy")}
+      </div>
       <p class="fine-print">Independent fan community. Not affiliated with any artist, label, festival, or venue.</p>
     </footer>`;
 }
 
-function communityPreview() {
-  if (features.communityPreview === false || !content.community) return "";
-  const cards = (content.community.items || []).map((item) => `
-    <article class="path-card community-card">
-      <p class="card-number">${item.label}</p>
-      <h2>${item.title}</h2>
-      <p>${item.text}</p>
-      ${safeLink(linkFor(item.link), "Join the conversation")}
-    </article>`).join("");
+const socialIcons = {
+  instagram: '<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="2.5" y="2.5" width="19" height="19" rx="5.5"/><circle cx="12" cy="12" r="4.1"/><circle class="icon-dot" cx="17.7" cy="6.4" r="1.15"/></svg>',
+  tiktok: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M16.5 2h-3.3v13.2a3.2 3.2 0 1 1-2.8-3.2V8.6a6.6 6.6 0 1 0 6.1 6.6V8.2a8 8 0 0 0 4.5 1.3V6.2A4.7 4.7 0 0 1 16.5 2Z"/></svg>',
+  etsy: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 3h14v4h-1.5V5H9v6h6V9.5h1.5v5H15V13H9v6h8.5v-2H19v4H5v-1.5h1.5v-15H5Z"/></svg>',
+  discord: '<svg class="discord-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M19.6 5.2a18 18 0 0 0-4.3-1.3l-.5 1a16 16 0 0 0-5.6 0l-.5-1a18 18 0 0 0-4.3 1.3C1.8 9 1 13.3 1.4 17.5a18 18 0 0 0 5.4 2.7l1.1-1.8c-.6-.2-1.2-.5-1.7-.8 3.6 1.7 8 1.7 11.6 0-.5.3-1.1.6-1.7.8l1.1 1.8a18 18 0 0 0 5.4-2.7c.4-4.2-.4-8.5-3-12.3Z"/><circle cx="8.5" cy="13.3" r="1.15"/><circle cx="15.5" cy="13.3" r="1.15"/></svg>'
+};
 
-  return `
-    <section class="section-heading">
-      <p class="stamp">${content.community.title}</p>
-      <h2>${content.community.intro}</h2>
-    </section>
-    <section class="path-grid community-grid" aria-label="From the club">${cards}</section>`;
-}
-
-function shopPreview() {
-  if (features.shopPreview === false || features.etsy === false || !content.shop) return "";
-
-  if (!content.shop.items || content.shop.items.length === 0) {
-    return `
-      <section class="shop-preview">
-        <div>
-          <p class="stamp">${content.shop.title}</p>
-          <h2>${content.shop.intro}</h2>
-        </div>
-        ${safeLink(linkFor("etsy"), "Visit the shop", "button button-quiet")}
-      </section>`;
-  }
-
-  return `
-    <section class="shop-preview">
-      <div>
-        <p class="stamp">${content.shop.title}</p>
-        <h2>${content.shop.intro}</h2>
-      </div>
-      ${safeLink(linkFor("etsy"), "Visit the shop", "button button-quiet")}
-    </section>`;
+function socialLink(key, label) {
+  const url = linkFor(key);
+  const inner = `${socialIcons[key]}<span class="social-name">${label}</span>`;
+  return url
+    ? `<a class="social-card" href="${url}" target="_blank" rel="noopener noreferrer" aria-label="Visit Local Dreamers Club on ${label}">${inner}</a>`
+    : `<div class="social-card social-card-pending" aria-label="${label} link coming soon">${inner}</div>`;
 }
 
 function homePage() {
-  const cards = content.home.paths.map((item) => `
-    <article class="path-card">
-      <p class="card-number">${item.number}</p>
-      <h2>${item.title}</h2>
-      <p>${item.text}</p>
-      ${safeLink(linkFor(item.link), item.linkLabel)}
-    </article>`).join("");
-
-  const joinButton = features.discord !== false
-    ? safeLink(linkFor("discord"), "Join the conversation", "button button-primary")
-    : "";
-
-  const oceansButton = features.oceansPage !== false
-    ? '<a class="button button-quiet" href="/oceans/">Oceans Calling <span aria-hidden="true">→</span></a>'
-    : "";
-
-  const paths = features.homeMeetShareBelong !== false
-    ? `<section class="intro-strip"><p>${content.home.intro}</p></section>
-       <section class="path-grid" aria-label="Ways to take part">${cards}</section>`
-    : "";
-
-  const pulse = features.homeClubPulse !== false
-    ? `<section class="club-pulse">
-        <p class="stamp">NOW IN THE CLUB</p>
-        <div><h2>${content.home.pulseTitle}</h2><p>${content.home.pulseText}</p></div>
-        ${features.oceansPage !== false ? '<a class="button button-light" href="/oceans/">Enter Oceans Calling <span aria-hidden="true">→</span></a>' : ""}
-      </section>`
-    : "";
-
   return `
-    <main id="main">
-      <section class="hero home-hero">
-        <p class="eyebrow">${content.brand.eyebrow}</p>
-        <h1><span>${content.brand.statement.split(" ")[0]}</span><span>${content.brand.statement.split(" ")[1]}</span><span>${content.brand.statement.split(" ")[2]}</span></h1>
-        <p class="hero-copy">${content.brand.description}</p>
-        <div class="hero-actions">${joinButton}${oceansButton}</div>
-        <div class="thread-line" aria-hidden="true"></div>
+    <main id="main" class="landing-main">
+      <section class="landing-content" aria-label="Welcome to Local Dreamers Club">
+        <h1 class="visually-hidden">${content.brand.name}</h1>
+        <img class="landing-logo" src="/assets/images/local-dreamers-club-logo.png" alt="" width="2048" height="2048" />
+        <div class="landing-copy">
+          <p class="landing-tagline">${content.home.tagline}</p>
+          <p class="landing-invitation">${content.home.invitation}</p>
+        </div>
       </section>
-      ${paths}
-      ${communityPreview()}
-      ${shopPreview()}
-      ${pulse}
+      <section class="action-panel" aria-label="Join and follow the club">
+        <a class="discord-button" href="${linkFor("discord")}" target="_blank" rel="noopener noreferrer">Join the club on Discord <span aria-hidden="true">↗</span></a>
+        <p class="action-caption">Follow along and rep your fandom</p>
+        <nav class="landing-socials" aria-label="Follow and shop">
+          ${socialLink("instagram", "Instagram")}
+          ${socialLink("tiktok", "TikTok")}
+          ${socialLink("etsy", "Etsy merch")}
+        </nav>
+      </section>
+      <section class="home-about" id="about">
+        <p class="section-kicker">A place to find your people</p>
+        <h2>${content.home.aboutTitle}</h2>
+        <p>${content.home.aboutText}</p>
+      </section>
+      <section class="dispatches" id="dispatches" aria-labelledby="dispatches-title">
+        <div class="dispatches-heading">
+          <div><p class="section-kicker">From the club</p><h2 id="dispatches-title">${content.home.dispatchesTitle}</h2></div>
+          <p>${content.home.dispatchesIntro}</p>
+        </div>
+        <div id="dispatch-list" class="dispatch-list" aria-live="polite"><p class="feed-message">Loading dispatches…</p></div>
+        <button id="load-more" class="load-more" type="button" hidden>Load older updates</button>
+      </section>
+      <footer class="landing-footer">
+        <span>Independent fan community · Not affiliated with twenty one pilots</span>
+        <a href="/admin/">Club admin</a>
+      </footer>
     </main>`;
 }
 
 function oceansPage() {
   const o = content.oceans;
-  if (features.oceansPage === false) {
-    return `<main id="main" class="inner-page"><section class="inner-hero"><p class="eyebrow">Local Dreamers Club</p><h1>This page is resting.</h1><p class="hero-copy">The Oceans Calling page is currently turned off.</p></section></main>`;
-  }
-
   return `
     <main id="main" class="oceans-main">
       <section class="oceans-hero">
@@ -141,16 +103,18 @@ function oceansPage() {
         <h1>${o.title}</h1>
         <p class="hero-copy">${o.intro}</p>
         <div class="hero-actions">
-          ${features.discord !== false ? safeLink(linkFor("discord"), o.primaryButton, "button button-primary") : ""}
+          ${safeLink(linkFor("discord"), o.primaryButton, "button button-primary")}
           <a class="button button-quiet" href="/about/">${o.secondaryButton} <span aria-hidden="true">→</span></a>
         </div>
         <div class="event-meta"><span>${o.place}</span><span>${o.date}</span></div>
       </section>
+
       <section class="memory-card">
         <p class="stamp">AFTER THE MUSIC</p>
         <blockquote>${o.prompt}</blockquote>
         <p>${o.note}</p>
       </section>
+
       <section class="oceans-close">
         <p>YOU FOUND ANOTHER DREAMER.</p>
         <a href="/connect/">Stay in touch <span aria-hidden="true">→</span></a>
@@ -173,7 +137,7 @@ function aboutPage() {
       <section class="plain-cta">
         <h2>You do not have to prove you belong here.</h2>
         <p>Listen closely. Make something. Say hello. That is enough.</p>
-        ${features.discord !== false ? safeLink(linkFor("discord"), "Join the club", "button button-primary") : ""}
+        ${safeLink(linkFor("discord"), "Join the club", "button button-primary")}
       </section>
     </main>`;
 }
@@ -181,11 +145,10 @@ function aboutPage() {
 function connectPage() {
   const c = content.connect;
   const items = [
-    features.discord !== false && ["Discord", c.discordText, "discord", "Enter the clubhouse"],
-    features.etsy !== false && ["Etsy", c.etsyText, "etsy", "Visit the shop"],
-    features.instagram !== false && ["Instagram", c.instagramText, "instagram", "Follow along"]
-  ].filter(Boolean);
-
+    ["Discord", c.discordText, "discord", "Enter the clubhouse"],
+    ["Etsy", c.etsyText, "etsy", "Visit the shop"],
+    ["Instagram", c.instagramText, "instagram", "Follow along"]
+  ];
   return `
     <main id="main" class="inner-page">
       <section class="inner-hero compact">
@@ -213,7 +176,9 @@ function render() {
 
   const page = document.body.dataset.page;
   const pages = { home: homePage, oceans: oceansPage, about: aboutPage, connect: connectPage };
-  document.body.innerHTML = header() + (pages[page] || homePage)() + footer();
+  document.body.innerHTML = page === "home"
+    ? '<a class="skip-link" href="#main">Skip to content</a>' + homePage()
+    : header() + (pages[page] || homePage)() + footer();
 
   const button = document.querySelector(".menu-button");
   const nav = document.querySelector(".site-nav");
@@ -229,6 +194,53 @@ function render() {
       link.setAttribute("aria-current", "page");
     }
   });
+
+  if (page === "home") loadDispatches();
 }
+
+function escapeHTML(value) {
+  return String(value).replace(/[&<>"']/g, (char) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[char]);
+}
+
+function formatDate(value) {
+  const date = new Date(value);
+  return Number.isNaN(date.getTime()) ? "" : new Intl.DateTimeFormat(undefined, { dateStyle: "medium" }).format(date);
+}
+
+let dispatchCursor = null;
+let dispatchBusy = false;
+async function loadDispatches(append = false) {
+  if (dispatchBusy) return;
+  dispatchBusy = true;
+  const list = document.querySelector("#dispatch-list");
+  const more = document.querySelector("#load-more");
+  if (!append) list.innerHTML = '<p class="feed-message">Loading dispatches…</p>';
+  try {
+    const url = new URL("/api/updates", location.origin);
+    if (dispatchCursor && append) url.searchParams.set("before", dispatchCursor);
+    const response = await fetch(url);
+    if (!response.ok) throw new Error("feed unavailable");
+    const data = await response.json();
+    if (!append) list.replaceChildren();
+    if (!data.items.length && !append) list.innerHTML = '<p class="feed-message">Our first dispatch is on its way. Come back soon.</p>';
+    for (const post of data.items) {
+      const article = document.createElement("article");
+      article.className = "dispatch-post";
+      const images = post.images?.length ? `<div class="dispatch-images">${post.images.map((image) => `<img src="${escapeHTML(image.url)}" alt="${escapeHTML(image.alt || "Club update photo")}" loading="lazy">`).join("")}</div>` : "";
+      article.innerHTML = `<p class="dispatch-date"><time datetime="${escapeHTML(post.createdAt)}">${escapeHTML(formatDate(post.createdAt))}</time></p><p class="dispatch-body">${escapeHTML(post.body).replace(/\n/g, "<br>")}</p>${images}`;
+      list.append(article);
+    }
+    dispatchCursor = data.nextCursor;
+    more.hidden = !dispatchCursor;
+  } catch {
+    if (!append) list.innerHTML = '<p class="feed-message">Dispatches are taking a little longer to come through. Please check back soon.</p>';
+  } finally {
+    dispatchBusy = false;
+  }
+}
+
+document.addEventListener("click", (event) => {
+  if (event.target.closest("#load-more")) loadDispatches(true);
+});
 
 render();

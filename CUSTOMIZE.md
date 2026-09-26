@@ -1,123 +1,20 @@
-# Local Dreamers Club — easy-change guide
+# Easy changes
 
-The site is intentionally split into three layers:
+Open `dist/assets/site-content.js` for landing-page copy, about text, and social destinations. The update feed itself is managed through `/admin/` after the Node backend and database are configured.
 
-1. **Content and switches** — `dist/assets/site-content.js`
-2. **Page structure** — `dist/assets/site.js`
-3. **Visual styling** — `dist/assets/styles.css`
+## Edit homepage copy and links
 
-For normal changes, start with **site-content.js**.
+- `home.tagline` and `home.invitation` — the text below the logo
+- `home.aboutTitle` and `home.aboutText` — the About section
+- `home.dispatchesTitle` and `home.dispatchesIntro` — the updates section heading
+- `links.discord`, `links.instagram`, `links.tiktok`, and `links.etsy` — club destinations
+- `theme` — the shared site colors
 
-## Turn a whole section on or off
+## Publish a club update
 
-At the very top of `site-content.js` is a `features` section:
+1. Visit `/admin/` and sign in with your personal admin account.
+2. Write up to 500 characters and optionally attach up to four photos.
+3. Add optional image descriptions, then publish. The update appears on the public site right away.
+4. Use the controls below the post to edit its text/photos or delete it.
 
-```js
-features: {
-  oceansPage: true,
-  homeMeetShareBelong: true,
-  homeClubPulse: true,
-  discord: true,
-  etsy: true,
-  instagram: true,
-  communityPreview: true,
-  shopPreview: true
-}
-```
-
-Change `true` to `false` and that part disappears without deleting it.
-
-Examples:
-
-```js
-shopPreview: false
-```
-
-hides the Etsy preview from the home page.
-
-```js
-oceansPage: false
-```
-
-removes Oceans from navigation and disables the event page.
-
-This is the preferred way to test things Ashlie is unsure about.
-
-## Change words
-
-Edit the matching section in `site-content.js`:
-
-- `brand` — main identity and homepage message
-- `home` — Meet / Share / Belong
-- `community` — homepage community preview
-- `shop` — homepage Etsy preview
-- `oceans` — festival landing page
-- `about` — story and principles
-- `connect` — Discord, Etsy and Instagram descriptions
-
-## Add real links
-
-Change:
-
-```js
-discord: "",
-```
-
-to:
-
-```js
-discord: "https://discord.gg/your-invite",
-```
-
-Empty links automatically appear as **coming soon**.
-
-## Change the site colors
-
-The five main colors live in:
-
-```js
-theme: {
-  ink: "#0a0a0b",
-  paper: "#f2eee5",
-  red: "#b72f36",
-  yellow: "#d4ad43",
-  muted: "#a6a099"
-}
-```
-
-One color change updates the whole site.
-
-## Discord and Etsy integration
-
-Both integrations begin in manual mode:
-
-```js
-integrations: {
-  discord: {
-    mode: "manual",
-    publicFeedEnabled: false
-  },
-  etsy: {
-    mode: "manual",
-    liveProductsEnabled: false
-  }
-}
-```
-
-We will switch these on only after the Discord server and Etsy API connection are ready.
-
-The public site should only show:
-- Discord posts/threads that you explicitly choose to feature
-- Etsy listings Ashlie chooses to expose
-
-No private Discord conversation should ever be pulled automatically.
-
-## Safe review routine
-
-1. Change one thing in `site-content.js`.
-2. Run `preview.command` or `npm run dev`.
-3. Check Home and Oceans on desktop and a phone-sized window.
-4. If Ashlie does not like it, undo the edit or switch that feature to `false`.
-5. Commit only the version you both want to keep.
-
-The goal is simple: changing your mind should be cheap.
+The two admin accounts are configured in Hostinger environment settings. Public visitors cannot register or post.

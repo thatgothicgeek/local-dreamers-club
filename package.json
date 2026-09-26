@@ -3,8 +3,18 @@
   "version": "0.1.0",
   "private": true,
   "type": "module",
+  "engines": { "node": ">=20 <25" },
   "scripts": {
     "dev": "node server.mjs",
-    "check": "node --check server.mjs && node --check dist/assets/site-content.js && node --check dist/assets/site.js"
+    "start": "node server.mjs",
+    "build": "node --check server.mjs && node --check dist/assets/site.js && node --check dist/assets/admin.js",
+    "check": "node --check server.mjs && node --check dist/assets/site-content.js && node --check dist/assets/site.js && node --check dist/assets/admin.js && node --check scripts/hash-password.mjs"
+  },
+  "dependencies": {
+    "cookie-session": "^2.1.0",
+    "express": "^5.1.0",
+    "express-rate-limit": "^8.1.0",
+    "multer": "^2.0.2",
+    "mysql2": "^3.15.0"
   }
 }
