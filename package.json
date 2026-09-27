@@ -3,7 +3,9 @@
   "version": "0.1.0",
   "private": true,
   "type": "module",
-  "engines": { "node": ">=20 <25" },
+  "engines": {
+    "node": ">=20 <25"
+  },
   "scripts": {
     "dev": "node server.mjs",
     "start": "node server.mjs",
@@ -15,6 +17,7 @@
     "express": "^5.1.0",
     "express-rate-limit": "^8.1.0",
     "multer": "^2.0.2",
-    "mysql2": "^3.15.0"
+    "mysql2": "^3.15.0",
+    "nodemailer": "^10.0.10"
   }
 }

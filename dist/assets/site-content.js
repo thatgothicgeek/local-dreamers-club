@@ -15,7 +15,7 @@ window.LDC_CONTENT = {
 
   /* Replace these when the accounts are ready. */
   links: {
-    discord: "https://discord.gg/6edpWAqdR",
+    discord: "https://discord.gg/zmkmw2ENmw",
     etsy: "https://www.etsy.com/shop/LocalDreamersClub",
     instagram: "https://www.instagram.com/local_dreamers_club/",
     tiktok: "https://www.tiktok.com/@just_a_local_dreamer",

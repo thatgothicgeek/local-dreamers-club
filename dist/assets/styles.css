@@ -202,3 +202,20 @@ body[data-page="home"]::before {
   .landing-main { justify-content: flex-start; }
   .landing-logo { width: min(58vw, 620px); margin-top: -2.25rem; margin-bottom: -5.5rem; }
 }
+.contact-trigger { padding: 0; border: 0; background: transparent; cursor: pointer; }
+.contact-trigger svg { width: 1.2rem; height: 1.2rem; }
+.contact-dialog { width: min(100% - 2rem, 540px); max-height: min(88svh, 780px); padding: 0; overflow: auto; border: 1px solid rgba(244,238,229,.2); border-radius: 14px; background: #222; color: #f3f0e9; box-shadow: 0 24px 90px rgba(0,0,0,.65); }
+.contact-dialog::backdrop { background: rgba(0,0,0,.72); backdrop-filter: blur(5px); }
+.contact-form { position: relative; display: grid; gap: 1rem; padding: clamp(1.25rem, 5vw, 2rem); text-align: left; }
+.contact-form h2 { margin: -.45rem 0 0; font: 500 clamp(1.6rem, 5vw, 2.1rem)/1.15 Manrope, system-ui, sans-serif; letter-spacing: -.04em; }
+.contact-intro { margin: -.5rem 0 .2rem; color: #c4beb6; font-size: .9rem; line-height: 1.55; }
+.contact-form label:not(.contact-honeypot) { display: grid; gap: .42rem; color: #e5e0d9; font-size: .84rem; }
+.contact-form input, .contact-form textarea { width: 100%; padding: .78rem .85rem; border: 1px solid rgba(244,238,229,.23); border-radius: 6px; background: #171717; color: #f4f0e8; font: inherit; }
+.contact-form textarea { resize: vertical; line-height: 1.55; }
+.contact-form input:focus, .contact-form textarea:focus { outline: 2px solid #fa6847; outline-offset: 2px; }
+.contact-close { position: absolute; top: .75rem; right: .8rem; width: 2.3rem; height: 2.3rem; border: 1px solid rgba(244,238,229,.2); border-radius: 50%; background: transparent; color: #eeeae3; font-size: 1.5rem; cursor: pointer; }
+.contact-submit { min-height: 3rem; padding: .75rem 1rem; border: 0; border-radius: 6px; background: #ed4828; color: #fff; font: 600 1rem Manrope, sans-serif; cursor: pointer; }
+.contact-submit:disabled { opacity: .65; cursor: wait; }
+.contact-status { min-height: 1.3em; margin: 0; color: #c7d7bd; font-size: .83rem; }
+.contact-status.is-error { color: #ff9a86; }
+.contact-honeypot { position: absolute !important; left: -10000px !important; width: 1px; height: 1px; overflow: hidden; }

@@ -37,7 +37,8 @@ const socialIcons = {
   instagram: '<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="2.5" y="2.5" width="19" height="19" rx="5.5"/><circle cx="12" cy="12" r="4.1"/><circle class="icon-dot" cx="17.7" cy="6.4" r="1.15"/></svg>',
   tiktok: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M16.5 2h-3.3v13.2a3.2 3.2 0 1 1-2.8-3.2V8.6a6.6 6.6 0 1 0 6.1 6.6V8.2a8 8 0 0 0 4.5 1.3V6.2A4.7 4.7 0 0 1 16.5 2Z"/></svg>',
   etsy: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 3h14v4h-1.5V5H9v6h6V9.5h1.5v5H15V13H9v6h8.5v-2H19v4H5v-1.5h1.5v-15H5Z"/></svg>',
-  discord: '<svg class="discord-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M19.6 5.2a18 18 0 0 0-4.3-1.3l-.5 1a16 16 0 0 0-5.6 0l-.5-1a18 18 0 0 0-4.3 1.3C1.8 9 1 13.3 1.4 17.5a18 18 0 0 0 5.4 2.7l1.1-1.8c-.6-.2-1.2-.5-1.7-.8 3.6 1.7 8 1.7 11.6 0-.5.3-1.1.6-1.7.8l1.1 1.8a18 18 0 0 0 5.4-2.7c.4-4.2-.4-8.5-3-12.3Z"/><circle cx="8.5" cy="13.3" r="1.15"/><circle cx="15.5" cy="13.3" r="1.15"/></svg>'
+  discord: '<svg class="discord-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M19.6 5.2a18 18 0 0 0-4.3-1.3l-.5 1a16 16 0 0 0-5.6 0l-.5-1a18 18 0 0 0-4.3 1.3C1.8 9 1 13.3 1.4 17.5a18 18 0 0 0 5.4 2.7l1.1-1.8c-.6-.2-1.2-.5-1.7-.8 3.6 1.7 8 1.7 11.6 0-.5.3-1.1.6-1.7.8l1.1 1.8a18 18 0 0 0 5.4-2.7c.4-4.2-.4-8.5-3-12.3Z"/><circle cx="8.5" cy="13.3" r="1.15"/><circle cx="15.5" cy="13.3" r="1.15"/></svg>',
+  email: '<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="2.5" y="4.5" width="19" height="15" rx="2.2"/><path d="m3.5 6 8.5 7 8.5-7"/></svg>'
 };
 
 function homePage() {
@@ -57,6 +58,7 @@ function homePage() {
           <span class="social-group-label">Rep the club:</span>
           ${socials.slice(2).map((social) => socialLinkFor(social)).join("")}
         </div>
+        <button class="social-icon contact-trigger" type="button" aria-label="Email Local Dreamers Club" title="Email us" aria-haspopup="dialog">${socialIcons.email}</button>
       </nav>
       <section class="landing-content" aria-label="Welcome to Local Dreamers Club">
         <img class="landing-logo" src="/assets/images/local-dreamers-club-logo.png" alt="" width="2048" height="2048" />
@@ -84,7 +86,20 @@ function homePage() {
       <footer class="landing-footer">
         <span>© ${new Date().getFullYear()} Local Dreamers Club. All rights reserved. Independent fan community; not affiliated with twenty one pilots, their music, or rights holders.</span>
       </footer>
-    </main>`;
+    </main>
+    <dialog class="contact-dialog" id="contact-dialog" aria-labelledby="contact-title">
+      <form id="contact-form" class="contact-form">
+        <button class="contact-close" type="button" aria-label="Close contact form">×</button>
+        <p class="section-kicker">Say hello</p><h2 id="contact-title">Contact the club</h2>
+        <p class="contact-intro">Send a note to Ash. Your email is used only so she can reply.</p>
+        <label>Your name<input name="name" autocomplete="name" maxlength="100" required /></label>
+        <label>Your email<input name="email" type="email" autocomplete="email" maxlength="254" required /></label>
+        <label>Message<textarea name="message" rows="5" maxlength="3000" required></textarea></label>
+        <label class="contact-honeypot" aria-hidden="true">Leave this field empty<input name="website" tabindex="-1" autocomplete="off" /></label>
+        <button class="contact-submit" type="submit">Send message</button>
+        <p class="contact-status" id="contact-status" role="status" aria-live="polite"></p>
+      </form>
+    </dialog>`;
 }
 
 function socialLinkFor(social) {
@@ -262,3 +277,27 @@ document.addEventListener("click", (event) => {
 
 render();
 loadPublicSettings();
+
+const contactDialog = document.querySelector("#contact-dialog");
+document.querySelector(".contact-trigger")?.addEventListener("click", () => contactDialog?.showModal());
+document.querySelector(".contact-close")?.addEventListener("click", () => contactDialog?.close());
+contactDialog?.addEventListener("click", (event) => { if (event.target === contactDialog) contactDialog.close(); });
+document.querySelector("#contact-form")?.addEventListener("submit", async (event) => {
+  event.preventDefault();
+  const form = event.currentTarget;
+  const submit = form.querySelector(".contact-submit");
+  const status = form.querySelector(".contact-status");
+  status.textContent = "Sending…";
+  status.classList.remove("is-error");
+  submit.disabled = true;
+  try {
+    const response = await fetch("/api/contact", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(Object.fromEntries(new FormData(form))) });
+    const result = await response.json().catch(() => ({}));
+    if (!response.ok) throw new Error(result.error || "Your message could not be sent. Please try again.");
+    form.reset();
+    status.textContent = "Your message has been sent. Thanks for reaching out!";
+  } catch (error) {
+    status.textContent = error.message || "Your message could not be sent. Please try again.";
+    status.classList.add("is-error");
+  } finally { submit.disabled = false; }
+});

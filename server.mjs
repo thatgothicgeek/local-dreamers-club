@@ -3,6 +3,7 @@ import cookieSession from "cookie-session";
 import multer from "multer";
 import { rateLimit } from "express-rate-limit";
 import mysql from "mysql2/promise";
+import nodemailer from "nodemailer";
 import { randomBytes, scrypt as scryptCallback, timingSafeEqual } from "node:crypto";
 import { promisify } from "node:util";
 import { join } from "node:path";
@@ -52,6 +53,7 @@ const upload = multer({
   limits: { fileSize: 2 * 1024 * 1024, files: 4, fields: 4, fieldSize: 16 * 1024 }
 });
 const loginLimiter = rateLimit({ windowMs: 15 * 60 * 1000, limit: 10, standardHeaders: "draft-8", legacyHeaders: false });
+const contactLimiter = rateLimit({ windowMs: 15 * 60 * 1000, limit: 5, standardHeaders: "draft-8", legacyHeaders: false });
 
 const defaultSiteSettings = {
   aboutTitle: "About the Local Dreamers Club",
@@ -191,6 +193,47 @@ app.get("/api/admin/session", (req, res) => res.json({ username: req.session.adm
 app.get("/api/site-settings", async (_req, res, next) => {
   try { res.json(await readSiteSettings()); }
   catch (error) { next(error); }
+});
+
+app.post("/api/contact", contactLimiter, async (req, res, next) => {
+  const origin = req.get("origin");
+  if (origin) {
+    try { if (new URL(origin).host !== req.get("host")) return res.status(403).json({ error: "This form can only be submitted from the club website." }); }
+    catch { return res.status(403).json({ error: "This form can only be submitted from the club website." }); }
+  }
+  const { name, email, message: body, website } = req.body || {};
+  if (typeof website === "string" && website.trim()) return res.json({ ok: true });
+  if ([name, email, body].some((value) => typeof value !== "string")) return res.status(400).json({ error: "Complete each field and try again." });
+  const cleanName = name.trim();
+  const cleanEmail = email.trim();
+  const cleanBody = body.trim();
+  if (!cleanName || cleanName.length > 100 || /[\r\n\x00-\x1f]/.test(cleanName)) return res.status(400).json({ error: "Enter a name under 100 characters." });
+  if (cleanEmail.length > 254 || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(cleanEmail) || /[\r\n\x00-\x1f]/.test(cleanEmail)) return res.status(400).json({ error: "Enter a valid email address." });
+  if (!cleanBody || cleanBody.length > 3000) return res.status(400).json({ error: "Write a message under 3,000 characters." });
+  const { SMTP_HOST, SMTP_USER, SMTP_PASSWORD } = process.env;
+  if (!SMTP_HOST || !SMTP_USER || !SMTP_PASSWORD) return res.status(503).json({ error: "The contact form is not available yet. Please try again later." });
+  const port = Number(process.env.SMTP_PORT || 465);
+  if (![465, 587].includes(port)) return res.status(503).json({ error: "The contact form is not available yet. Please try again later." });
+  try {
+    const transporter = nodemailer.createTransport({
+      host: SMTP_HOST,
+      port,
+      secure: port === 465,
+      requireTLS: port === 587,
+      auth: { user: SMTP_USER, pass: SMTP_PASSWORD },
+      connectionTimeout: 10000,
+      greetingTimeout: 10000,
+      socketTimeout: 15000
+    });
+    await transporter.sendMail({
+      from: { name: "Local Dreamers Club Contact Form", address: SMTP_USER },
+      to: "ash@localdreamersclub.com",
+      replyTo: { name: cleanName, address: cleanEmail },
+      subject: "Website contact form message",
+      text: `From: ${cleanName}\nEmail: ${cleanEmail}\n\n${cleanBody}`
+    });
+    res.json({ ok: true });
+  } catch (error) { next(error); }
 });
 
 app.post("/api/admin/login", loginLimiter, databaseRequired, verifyCsrf, async (req, res, next) => {

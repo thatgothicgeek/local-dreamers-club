@@ -5,7 +5,10 @@ A small Node.js site with a public landing page and a private editor for short c
 ## Pages
 
 - `/` — Landing page, club links, About, and Dreamer Dispatches
-- `/admin/` — Private sign-in, publishing, and update management
+- `/admin/` — Private sign-in and new dispatch editor
+- `/admin/updates/` — Manage published dispatches
+- `/admin/settings/` — Customize homepage copy and social links
+- The Email icon in the social bar opens a contact form that sends to Ash
 - `/oceans/` — Redirects to the homepage for existing QR codes
 - `/about/`, `/connect/` — Earlier supporting pages
 
@@ -28,6 +31,7 @@ Required environment settings:
 - `ADMIN_1_USERNAME`, `ADMIN_1_PASSWORD_HASH`
 - `ADMIN_2_USERNAME`, `ADMIN_2_PASSWORD_HASH`
 - `NODE_ENV=production`
+- `SMTP_HOST`, `SMTP_PORT`, `SMTP_USER`, `SMTP_PASSWORD` — required for the contact form. For Hostinger Email use `smtp.hostinger.com` on port `465` (SSL) or `587` (STARTTLS); for Titan use `smtp.titan.email`. Use the full mailbox address as `SMTP_USER`. Keep the mailbox password in Hostinger environment settings, never in Git.
 
 Set the Hostinger start command to `npm start`. The process serves both the public site and its API. Do not deploy until the actual plan and MariaDB connection have been confirmed.
 
@@ -35,6 +39,6 @@ Set the Hostinger start command to `npm start`. The process serves both the publ
 
 Updates publish immediately and appear newest first. Each has up to 500 plain-text characters and up to four optional JPEG, PNG, or WebP images, each no larger than 2 MB. Image data is stored in MariaDB so it remains available after app deployments. Images may include an optional description for screen readers.
 
-The public landing page reads section copy and three social links from MariaDB. The private `/admin/` page can change the About and Dreamer Dispatches copy, link names, secure URLs, and matching icons. The `site_settings` table is included in `database/schema.sql` and is also created automatically at app startup when the database user has permission.
+The public landing page reads section copy and social links from MariaDB. The private `/admin/settings/` page can change the About and Dreamer Dispatches copy, link names, secure URLs, and matching icons, and add up to ten social links. The `site_settings` table is included in `database/schema.sql` and is also created automatically at app startup when the database user has permission.
 
-The Dispatches editor includes bold, italic, and HTTPS link formatting. It stores lightweight formatting markers in the 500-character update field, so the markers count toward that limit. The tagline and fallback text remain in `dist/assets/site-content.js`.
+The Dispatches editor includes bold, italic, underline, strikethrough, emoji, and HTTPS link formatting. It stores lightweight formatting markers in the 500-character update field, so the markers count toward that limit. The tagline and fallback text remain in `dist/assets/site-content.js`.
