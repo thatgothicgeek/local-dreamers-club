@@ -58,7 +58,10 @@ function homePage() {
           <span class="social-group-label">Rep the club:</span>
           ${socials.slice(2).map((social) => socialLinkFor(social)).join("")}
         </div>
-        <button class="social-icon contact-trigger" type="button" aria-label="Email Local Dreamers Club" title="Email us" aria-haspopup="dialog">${socialIcons.email}</button>
+        <div class="social-group">
+          <span class="social-group-label">Contact@</span>
+          <button class="social-icon contact-trigger" type="button" aria-label="Email Local Dreamers Club" title="Email us" aria-haspopup="dialog">${socialIcons.email}</button>
+        </div>
       </nav>
       <section class="landing-content" aria-label="Welcome to Local Dreamers Club">
         <img class="landing-logo" src="/assets/images/local-dreamers-club-logo.png" alt="" width="2048" height="2048" />
